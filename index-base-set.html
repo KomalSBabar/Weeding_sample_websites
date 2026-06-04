@@ -1,0 +1,452 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Wedding Invitation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- Reset & Base Styles --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body, html {
+            width: 100%;
+            height: 100%;
+            font-family: 'Montserrat', sans-serif;
+            background-color: #fcf8f5;
+            color: #4a4a4a;
+            overflow: hidden;
+        }
+
+        /* --- Curtain & Ribbon Intro Overlay --- */
+        .intro-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 999;
+            display: flex;
+            overflow: hidden;
+            pointer-events: auto;
+        }
+
+        /* The Fabric Curtains */
+        .curtain {
+            width: 50%;
+            height: 100%;
+            background-color: #72120b;
+            position: absolute;
+            top: 0;
+            z-index: 1;
+            /* Ultra-smooth Bezier timing for physical fabric movement */
+            transition: transform 2s cubic-bezier(0.25, 1, 0.3, 1), 
+                        clip-path 2s cubic-bezier(0.25, 1, 0.3, 1),
+                        box-shadow 2s ease;
+        }
+        
+        /* Left Curtain: Removed the black shadow at 100% (the center seam) */
+        .curtain.left {
+            left: 0;
+            transform-origin: left center;
+            background-image: linear-gradient(90deg, 
+                rgba(0, 0, 0, 0.4) 0%, 
+                rgba(255, 255, 255, 0.1) 10%, 
+                rgba(0, 0, 0, 0.25) 25%, 
+                transparent 45%, 
+                rgba(0, 0, 0, 0.2) 70%, 
+                rgba(255, 255, 255, 0.05) 85%,
+                transparent 100% 
+            );
+            background-size: 170px 100%;
+            clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+        }
+        
+        /* Right Curtain: Removed the black shadow at 0% (the center seam) */
+        .curtain.right {
+            right: 0;
+            transform-origin: right center;
+            background-image: linear-gradient(90deg, 
+                transparent 0%,
+                rgba(255, 255, 255, 0.05) 15%,
+                rgba(0, 0, 0, 0.2) 30%, 
+                transparent 55%, 
+                rgba(0, 0, 0, 0.25) 75%, 
+                rgba(255, 255, 255, 0.1) 90%, 
+                rgba(0, 0, 0, 0.4) 100%
+            );
+            background-size: 170px 100%;
+            background-position: right top;
+            clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+        }
+
+        /* Horizontal Sash Belt (The main line across screen) */
+        .horizontal-sash-container {
+            position: absolute;
+            top: 55%; 
+            left: 0;
+            width: 100%;
+            height: 50px;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            pointer-events: none;
+        }
+
+        /* The horizontal belt pieces that disappear when curtains open */
+        .sash-half {
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(180deg, #9a6b10, #dfba54, #fbf5b7, #dfba54, #845907);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.35);
+            transition: transform 2s cubic-bezier(0.25, 1, 0.3, 1), opacity 1.5s ease;
+        }
+        .sash-half.left { transform-origin: left center; }
+        .sash-half.right { transform-origin: right center; }
+
+        /* --- New Cute Mini Tie-back Bows on the Side Walls --- */
+        .side-holder-bow {
+            position: absolute;
+            top: 55%;
+            width: 90px;
+            height: 80px;
+            z-index: 4;
+            opacity: 0;
+            transform: scale(0.4) translateY(-50%);
+            transition: transform 2s cubic-bezier(0.25, 1, 0.3, 1), opacity 1.5s ease;
+            pointer-events: none;
+        }
+        .side-holder-bow.left {
+            left: 10%;
+        }
+        .side-holder-bow.right {
+            right: 10%;
+        }
+
+        /* Center Wrapper for the main interactive click Bow */
+        .ribbon-overlay {
+            position: absolute;
+            top: 55%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 400px;
+            height: 240px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 5;
+            transition: transform 1.8s cubic-bezier(0.25, 1, 0.3, 1), opacity 0.6s ease;
+        }
+
+        /* Clickable Bow Centerpiece Button */
+        .bow-button {
+            position: relative;
+            width: 260px;
+            height: 200px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            outline: none;
+            filter: drop-shadow(0px 8px 12px rgba(0,0,0,0.4));
+            transition: transform 0.3s ease;
+            -webkit-tap-highlight-color: transparent;
+            pointer-events: auto;
+        }
+        
+        .bow-button:hover {
+            transform: scale(1.05);
+        }
+
+        .bow-svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        /* Typography inside the Bow Knot */
+        .bow-text-container {
+            position: relative;
+            z-index: 6;
+            text-align: center;
+            margin-top: -30px;
+            pointer-events: none;
+        }
+        
+        .bow-text-container h2 {
+            font-family: 'Alex Brush', cursive;
+            font-size: 2.3rem;
+            color: #4a0d08;
+            text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.4);
+            margin-bottom: 1px;
+        }
+
+        .bow-text-container span {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #5d140e;
+            font-weight: 600;
+        }
+
+        /* --- Elegant Open States --- */
+        
+        /* 1. Left Curtain pulls into a realistic gathered look */
+        .opened .curtain.left {
+            transform: scaleX(0.32);
+            box-shadow: 15px 0 30px rgba(0,0,0,0.45);
+            clip-path: polygon(0% 0%, 100% 0%, 65% 55%, 100% 100%, 0% 100%);
+        }
+
+        /* 2. Right Curtain pulls into a realistic gathered look */
+        .opened .curtain.right {
+            transform: scaleX(0.32);
+            box-shadow: -15px 0 30px rgba(0,0,0,0.45);
+            clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 35% 55%);
+        }
+
+        /* 3. The wide horizontal long sash line hides completely */
+        .opened .sash-half.left {
+            transform: scaleX(0);
+            opacity: 0;
+        }
+        .opened .sash-half.right {
+            transform: scaleX(0);
+            opacity: 0;
+        }
+
+        /* 4. The main center bow dissolves out */
+        .opened .bow-button {
+            opacity: 0;
+            transform: scale(0.5);
+            pointer-events: none;
+        }
+        .opened .ribbon-overlay {
+            opacity: 0;
+            transform: scale(0.5);
+            pointer-events: none;
+        }
+
+        /* 5. The two cute side mini-bows fade in right over the curtain folds! */
+        /* Typography inside the main knot */
+        .bow-text-container {
+            position: relative;
+            z-index: 6;
+            text-align: center;
+            margin-top: -30px;
+            pointer-events: none;
+        }
+        
+        .bow-text-container h2 {
+            font-family: 'Alex Brush', cursive;
+            font-size: 2.3rem;
+            color: #4a0d08;
+            text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.4);
+            margin-bottom: 1px;
+        }
+
+        .bow-text-container span {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #5d140e;
+            font-weight: 600;
+        }
+
+        /* --- Main Wedding Content --- */
+        .wedding-content {
+            opacity: 0;
+            transform: scale(0.97);
+            transition: opacity 1.5s ease 0.6s, transform 1.5s ease 0.6s;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        .opened + .wedding-content {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Hero Banner */
+        .hero {
+            position: relative;
+            height: 85vh;
+            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), 
+                        url('https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=1920') no-repeat center center/cover;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+            border-radius: 12px;
+            margin-top: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+        .hero h1 {
+            font-family: 'Alex Brush', cursive;
+            font-size: 5.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 6px rgba(0,0,0,0.5);
+        }
+        .hero p {
+            font-size: 1.3rem;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+        }
+
+        /* Details Section */
+        .details-section {
+            text-align: center;
+            padding: 80px 20px;
+        }
+        .details-section h2 {
+            font-family: 'Alex Brush', cursive;
+            font-size: 3.5rem;
+            color: #8a1c14;
+            margin-bottom: 20px;
+        }
+        .details-grid {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+        .detail-card {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            width: 300px;
+            border-top: 4px solid #dfba54;
+        }
+        footer {
+            text-align: center;
+            padding: 40px;
+            font-size: 0.9rem;
+            color: #888;
+            border-top: 1px solid #eee;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="intro-container" id="introContainer">
+        
+        <div class="curtain left"></div>
+        <div class="curtain right"></div>
+
+        <div class="horizontal-sash-container">
+            <div class="sash-half left"></div>
+            <div class="sash-half right"></div>
+        </div>
+
+        <div class="side-holder-bow left">
+            <svg viewBox="0 0 300 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="goldMini" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#9a6b10" /><stop offset="50%" stop-color="#fbf5b7" /><stop offset="100%" stop-color="#845907" />
+                    </linearGradient>
+                </defs>
+                <path d="M140 120 C80 45, -5 65, 20 125 C40 170, 100 150, 140 120 Z" fill="url(#goldMini)"/>
+                <path d="M160 120 C220 45, 305 65, 280 125 C260 170, 200 150, 160 120 Z" fill="url(#goldMini)"/>
+                <rect x="120" y="95" width="60" height="50" rx="25" fill="url(#goldMini)" stroke="#734d05" stroke-width="1"/>
+            </svg>
+        </div>
+
+        <div class="side-holder-bow right">
+            <svg viewBox="0 0 300 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <use href="#goldMini"/>
+                <path d="M140 120 C80 45, -5 65, 20 125 C40 170, 100 150, 140 120 Z" fill="url(#goldMini)"/>
+                <path d="M160 120 C220 45, 305 65, 280 125 C260 170, 200 150, 160 120 Z" fill="url(#goldMini)"/>
+                <rect x="120" y="95" width="60" height="50" rx="25" fill="url(#goldMini)" stroke="#734d05" stroke-width="1"/>
+            </svg>
+        </div>
+
+        <div class="ribbon-overlay">
+            <button class="bow-button" onclick="openCurtains()" aria-label="Open Invitation">
+                <svg class="bow-svg" viewBox="0 0 300 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="goldSatin" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#9a6b10" />
+                            <stop offset="25%" stop-color="#dfba54" />
+                            <stop offset="50%" stop-color="#fbf5b7" />
+                            <stop offset="75%" stop-color="#dfba54" />
+                            <stop offset="100%" stop-color="#845907" />
+                        </linearGradient>
+                        <linearGradient id="darkGold" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stop-color="#845907" />
+                            <stop offset="100%" stop-color="#4e3302" />
+                        </linearGradient>
+                    </defs>
+
+                    <path d="M135 125 L85 215 L125 205 L150 140 Z" fill="url(#goldSatin)"/>
+                    <path d="M135 125 L85 215 L105 210 Z" fill="url(#darkGold)" opacity="0.3"/>
+                    
+                    <path d="M165 125 L215 215 L175 205 L150 140 Z" fill="url(#goldSatin)"/>
+                    <path d="M165 125 L215 215 L195 210 Z" fill="url(#darkGold)" opacity="0.3"/>
+
+                    <path d="M140 120 C80 45, -5 65, 20 125 C40 170, 100 150, 140 120 Z" fill="url(#goldSatin)" stroke="#734d05" stroke-width="1"/>
+                    <path d="M140 120 C100 85, 25 95, 48 125 Z" fill="url(#darkGold)" opacity="0.2"/>
+
+                    <path d="M160 120 C220 45, 305 65, 280 125 C260 170, 200 150, 160 120 Z" fill="url(#goldSatin)" stroke="#734d05" stroke-width="1"/>
+                    <path d="M160 120 C200 85, 275 95, 252 125 Z" fill="url(#darkGold)" opacity="0.2"/>
+
+                    <rect x="115" y="90" width="70" height="60" rx="30" fill="url(#goldSatin)" stroke="#734d05" stroke-width="1"/>
+                    <path d="M115 120 C132 124, 168 124, 185 120" stroke="#845907" stroke-width="1.5" opacity="0.3"/>
+                </svg>
+
+                <div class="bow-text-container">
+                   
+                </div>
+            </button>
+        </div>
+    </div>
+
+    <div class="wedding-content">
+        <header class="hero">
+            <h1>Jonathan & Eleanor</h1>
+            <p>Are getting married</p>
+        </header>
+
+        <section class="details-section">
+            <h2>Save The Date</h2>
+            <p>We can't wait to celebrate our special day with you.</p>
+            <div class="details-grid">
+                <div class="detail-card">
+                    <h3>When</h3>
+                    <p>September 18, 2026<br>4:00 PM</p>
+                </div>
+                <div class="detail-card">
+                    <h3>Where</h3>
+                    <p>The Grand Orchid Gardens<br>San Francisco, CA</p>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p>Made with love • J & E 2026</p>
+        </footer>
+    </div>
+
+    <script>
+        function openCurtains() {
+            const intro = document.getElementById('introContainer');
+            intro.classList.add('opened');
+        }
+    </script>
+</body>
+</html>

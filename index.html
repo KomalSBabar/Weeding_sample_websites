@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Wedding Invitation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="wedding.css">
+    <style>
+        /* --- Reset & Base Styles --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body, html {
+            width: 100%;
+            height: 100%;
+            font-family: 'Montserrat', sans-serif;
+            background-color: #fcf8f5;
+            color: #4a4a4a;
+            overflow: hidden; /* Blocks scrolling initially */
+        }
+
+        /* --- FIX: Crucial class triggered by JS to restore scrolling --- */
+        body.allow-scroll {
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        /* --- Curtain & Ribbon Intro Overlay --- */
+        .intro-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 999;
+            display: flex;
+            overflow: hidden;
+            pointer-events: auto;
+            transition: visibility 2s; /* Hide container from interaction after reveal */
+        }
+        
+        /* Once opened, let clicks pass through to content behind curtains */
+        .intro-container.opened {
+            pointer-events: none;
+            visibility: hidden;
+        }
+
+        /* The Fabric Curtains */
+        .curtain {
+            width: 50%;
+            height: 100%;
+            background-color: #72120b;
+            position: absolute;
+            top: 0;
+            z-index: 1;
+            transition: transform 2s cubic-bezier(0.25, 1, 0.3, 1), 
+                        clip-path 2s cubic-bezier(0.25, 1, 0.3, 1),
+                        box-shadow 2s ease;
+        }
+        
+        .curtain.left {
+            left: 0;
+            transform-origin: left center;
+            background-image: linear-gradient(90deg, 
+                rgba(0, 0, 0, 0.4) 0%, 
+                rgba(255, 255, 255, 0.1) 10%, 
+                rgba(0, 0, 0, 0.25) 25%, 
+                transparent 45%, 
+                rgba(0, 0, 0, 0.2) 70%, 
+                rgba(255, 255, 255, 0.05) 85%,
+                transparent 100% 
+            );
+            background-size: 170px 100%;
+            clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+        }
+        
+        .curtain.right {
+            right: 0;
+            transform-origin: right center;
+            background-image: linear-gradient(90deg, 
+                transparent 0%,
+                rgba(255, 255, 255, 0.05) 15%,
+                rgba(0, 0, 0, 0.2) 30%, 
+                transparent 55%, 
+                rgba(0, 0, 0, 0.25) 75%, 
+                rgba(255, 255, 255, 0.1) 90%, 
+                rgba(0, 0, 0, 0.4) 100%
+            );
+            background-size: 170px 100%;
+            background-position: right top;
+            clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+        }
+
+        /* Horizontal Sash Belt */
+        .horizontal-sash-container {
+            position: absolute;
+            top: 55%; 
+            left: 0;
+            width: 100%;
+            height: 50px;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            pointer-events: none;
+        }
+
+        .sash-half {
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(180deg, #9a6b10, #dfba54, #fbf5b7, #dfba54, #845907);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.35);
+            transition: transform 2s cubic-bezier(0.25, 1, 0.3, 1), opacity 1.5s ease;
+        }
+        .sash-half.left { transform-origin: left center; }
+        .sash-half.right { transform-origin: right center; }
+
+        .side-holder-bow {
+            position: absolute;
+            top: 55%;
+            width: 90px;
+            height: 80px;
+            z-index: 4;
+            opacity: 0;
+            transform: scale(0.4) translateY(-50%);
+            transition: transform 2s cubic-bezier(0.25, 1, 0.3, 1), opacity 1.5s ease;
+            pointer-events: none;
+        }
+        .side-holder-bow.left { left: 10%; }
+        .side-holder-bow.right { right: 10%; }
+
+        /* Center Wrapper for the main interactive click Bow */
+        .ribbon-overlay {
+            position: absolute;
+            top: 55%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 400px;
+            height: 240px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 5;
+            transition: transform 1.8s cubic-bezier(0.25, 1, 0.3, 1), opacity 0.6s ease;
+        }
+
+        /* Clickable Bow Centerpiece Button */
+        .bow-button {
+            position: relative;
+            width: 260px;
+            height: 200px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            outline: none;
+            filter: drop-shadow(0px 8px 12px rgba(0,0,0,0.4));
+            transition: transform 0.3s ease;
+            -webkit-tap-highlight-color: transparent;
+            pointer-events: auto;
+        }
+        
+        .bow-button:hover {
+            transform: scale(1.05);
+        }
+
+        .bow-svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        /* --- Elegant Open States --- */
+        .opened .curtain.left {
+            transform: scaleX(0.32);
+            box-shadow: 15px 0 30px rgba(0,0,0,0.45);
+            clip-path: polygon(0% 0%, 100% 0%, 65% 55%, 100% 100%, 0% 100%);
+        }
+
+        .opened .curtain.right {
+            transform: scaleX(0.32);
+            box-shadow: -15px 0 30px rgba(0,0,0,0.45);
+            clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 35% 55%);
+        }
+
+        .opened .sash-half.left { transform: scaleX(0); opacity: 0; }
+        .opened .sash-half.right { transform: scaleX(0); opacity: 0; }
+
+        .opened .bow-button,
+        .opened .ribbon-overlay {
+            opacity: 0;
+            transform: scale(0.5);
+            pointer-events: none;
+        }
+
+        /* --- Main Wedding Content --- */
+        .wedding-content {
+            opacity: 0;
+            transform: scale(0.97);
+            transition: opacity 1.5s ease 0.6s, transform 1.5s ease 0.6s;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            /* FIX: Removed 'height: 100vh' and 'overflow-y: auto' to let the global window control scrolling */
+        }
+        
+        /* Reveal the content when intro container gets the opened class */
+        .opened + .wedding-content {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Hero Banner */
+        .hero {
+            position: relative;
+            height: 85vh;
+            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), 
+                        url('ban-punjabi.avif?auto=format&fit=crop&q=80&w=1920') no-repeat center center/cover;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+            border-radius: 12px;
+            margin-top: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+        .hero h1 {
+            font-family: 'Alex Brush', cursive;
+            font-size: 5.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 6px rgba(0,0,0,0.5);
+        }
+        .hero p {
+            font-size: 1.3rem;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+        }
+
+        /* Details Section */
+        /* .details-section {
+            text-align: center;
+            padding: 80px 20px;
+        }
+        .details-section h2 {
+            font-family: 'Alex Brush', cursive;
+            font-size: 3.5rem;
+            color: #8a1c14;
+            margin-bottom: 20px;
+        }
+        .details-grid {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+        .detail-card {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            width: 300px;
+            border-top: 4px solid #dfba54;
+        } */
+
+        /* --- ENHANCED SAVE THE DATE ARCHITECTURE --- */
+.details-section {
+    position: relative;
+    text-align: center;
+    padding: 120px 40px;
+    background: #fbf6f0;
+    overflow: hidden;
+}
+
+/* Subtle regal border styling inside the section */
+.details-section::before {
+    content: '';
+    position: absolute;
+    top: 20px; left: 20px; right: 20px; bottom: 20px;
+    /* border: 1px solid rgba(138, 28, 20, 0.15);
+    border-radius: 8px; */
+    pointer-events: none;
+}
+
+.section-sub-tag {
+    display: block;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    color: #dfba54;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.details-section h2 {
+    /* font-family: 'Alex Brush', cursive; */
+    /* font-size: 4.8rem !important; Fixing tiny scale from image_937730.png */
+    color: #8a1c14;
+    margin-bottom: 20px;
+    /* font-weight: 400; */
+}
+
+.section-intro-text {
+    max-width: 700px;
+    margin: 0 auto 60px auto;
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #635b54;
+    font-weight: 300;
+}
+
+/* Luxury Card Grid System */
+.details-grid {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+}
+
+.detail-card {
+    background: #ffffff;
+    padding: 45px 35px;
+    border-radius: 12px;
+    box-shadow: 0 15px 40px rgba(138, 28, 20, 0.05);
+    width: 380px; /* Wider and more substantial presence */
+    border: 1px solid rgba(223, 186, 84, 0.25);
+    border-top: 5px solid #8a1c14; /* Switched primary emphasis to deep royal maroon */
+    position: relative;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
+}
+
+.detail-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 25px 50px rgba(138, 28, 20, 0.12);
+}
+
+/* Graphic elements inside cards */
+.card-icon-wrapper {
+    width: 60px;
+    height: 60px;
+    background: #fffdfa;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 25px auto;
+    border: 1px solid rgba(223, 186, 84, 0.4);
+}
+
+.card-icon-wrapper svg {
+    width: 28px;
+    height: 28px;
+}
+
+.detail-card h3 {
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #8a1c14;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.punjabi-date-title, 
+.venue-main-name {
+    display: block;
+    font-size: 1.35rem;
+    color: #1a1a1a;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.time-stamp, 
+.venue-address {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #666;
+}
+
+/* Royal Corner Design Motifs */
+.card-corner-accent {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    width: 16px;
+    height: 16px;
+    border-right: 2px solid rgba(223, 186, 84, 0.6);
+    border-bottom: 2px solid rgba(223, 186, 84, 0.6);
+    border-radius: 0 0 4px 0;
+}
+
+/* Responsive Scaling fixes */
+@media (max-width: 768px) {
+    .details-section {
+        padding: 80px 20px;
+    }
+    .details-section h2 {
+        font-size: 3.8rem !important;
+    }
+    .detail-card {
+        width: 100%;
+    }
+}
+
+/* --- REGAL WEDDING FOOTER DESIGN --- */
+/* --- REGAL MAROON WEDDING FOOTER --- */
+.wedding-footer.maroon-theme {
+    background-color: #8a1c14; /* Deep Royal Maroon background to firmly close the layout */
+    padding: 70px 20px 50px 20px;
+    text-align: center;
+    position: relative;
+    border-top: 3px solid #dfba54; /* Beautiful solid gold top rim */
+}
+
+/* Elegant Contrast Lines and Divider */
+.wedding-footer.maroon-theme .footer-decorative-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    max-width: 400px;
+    margin: 0 auto 35px auto;
+}
+
+.wedding-footer.maroon-theme .footer-decorative-divider .divider-line {
+    flex: 1;
+    height: 1px;
+    /* Soft glowing gradient over the dark red */
+    background: linear-gradient(to var(--direction, right), rgba(255, 255, 255, 0), rgba(223, 186, 84, 0.6));
+}
+
+.wedding-footer.maroon-theme .footer-decorative-divider .divider-line:last-child {
+    --direction: left;
+}
+
+.wedding-footer.maroon-theme .footer-decorative-divider .divider-cluster {
+    font-size: 1.1rem;
+    color: #dfba54; /* Rich gold accents */
+    letter-spacing: 2px;
+}
+
+/* Typography Overrides for Dark Background */
+.wedding-footer.maroon-theme .footer-content {
+    max-width: 650px;
+    margin: 0 auto;
+}
+
+.wedding-footer.maroon-theme .footer-monogram {
+    font-family: 'Alex Brush', cursive;
+    font-size: 3rem; /* Made slightly larger for enhanced presence */
+    color: #dfba54; /* Gold monogram contrast against dark red */
+    margin-bottom: 15px;
+    font-weight: 400;
+    letter-spacing: 1px;
+}
+
+.wedding-footer.maroon-theme .footer-blessing {
+    font-size: 1.05rem;
+    color: #fcf8f5; /* Crisp off-white text for ultimate readability */
+    line-height: 1.7;
+    margin-bottom: 35px;
+    font-style: italic;
+    font-weight: 300;
+    letter-spacing: 0.3px;
+}
+
+.wedding-footer.maroon-theme .footer-meta {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 25px;
+}
+
+.wedding-footer.maroon-theme .made-with-love {
+    font-size: 0.9rem;
+    color: #ffffff;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+
+.wedding-footer.maroon-theme .hashtag-reminder {
+    font-size: 0.85rem;
+    color: #dfba54; /* Warm gold subtle tag */
+    letter-spacing: 0.5px;
+    margin: 0;
+    font-weight: 400;
+}
+
+/* Responsive adjust */
+@media (max-width: 480px) {
+    .wedding-footer.maroon-theme {
+        padding: 55px 15px 40px 15px;
+    }
+    .wedding-footer.maroon-theme .footer-monogram {
+        font-size: 2.5rem;
+    }
+    .wedding-footer.maroon-theme .footer-blessing {
+        font-size: 0.95rem;
+    }
+}
+
+
+    </style>
+</head>
+<body>
+
+    <div class="intro-container" id="introContainer">
+        <div class="curtain left"></div>
+        <div class="curtain right"></div>
+
+        <div class="horizontal-sash-container">
+            <div class="sash-half left"></div>
+            <div class="sash-half right"></div>
+        </div>
+
+        <div class="side-holder-bow left">
+            <svg viewBox="0 0 300 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="goldMini" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#9a6b10" /><stop offset="50%" stop-color="#fbf5b7" /><stop offset="100%" stop-color="#845907" />
+                    </linearGradient>
+                </defs>
+                <path d="M140 120 C80 45, -5 65, 20 125 C40 170, 100 150, 140 120 Z" fill="url(#goldMini)"/>
+                <path d="M160 120 C220 45, 305 65, 280 125 C260 170, 200 150, 160 120 Z" fill="url(#goldMini)"/>
+                <rect x="120" y="95" width="60" height="50" rx="25" fill="url(#goldMini)" stroke="#734d05" stroke-width="1"/>
+            </svg>
+        </div>
+
+        <div class="side-holder-bow right">
+            <svg viewBox="0 0 300 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M140 120 C80 45, -5 65, 20 125 C40 170, 100 150, 140 120 Z" fill="url(#goldMini)"/>
+                <path d="M160 120 C220 45, 305 65, 280 125 C260 170, 200 150, 160 120 Z" fill="url(#goldMini)"/>
+                <rect x="120" y="95" width="60" height="50" rx="25" fill="url(#goldMini)" stroke="#734d05" stroke-width="1"/>
+            </svg>
+        </div>
+
+        <div class="ribbon-overlay">
+            <button class="bow-button" onclick="openCurtains()" aria-label="Open Invitation">
+                <svg class="bow-svg" viewBox="0 0 300 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="goldSatin" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#9a6b10" />
+                            <stop offset="25%" stop-color="#dfba54" />
+                            <stop offset="50%" stop-color="#fbf5b7" />
+                            <stop offset="75%" stop-color="#dfba54" />
+                            <stop offset="100%" stop-color="#845907" />
+                        </linearGradient>
+                        <linearGradient id="darkGold" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stop-color="#845907" />
+                            <stop offset="100%" stop-color="#4e3302" />
+                        </linearGradient>
+                    </defs>
+                    <path d="M135 125 L85 215 L125 205 L150 140 Z" fill="url(#goldSatin)"/>
+                    <path d="M135 125 L85 215 L105 210 Z" fill="url(#darkGold)" opacity="0.3"/>
+                    <path d="M165 125 L215 215 L175 205 L150 140 Z" fill="url(#goldSatin)"/>
+                    <path d="M165 125 L215 215 L195 210 Z" fill="url(#darkGold)" opacity="0.3"/>
+                    <path d="M140 120 C80 45, -5 65, 20 125 C40 170, 100 150, 140 120 Z" fill="url(#goldSatin)" stroke="#734d05" stroke-width="1"/>
+                    <path d="M140 120 C100 85, 25 95, 48 125 Z" fill="url(#darkGold)" opacity="0.2"/>
+                    <path d="M160 120 C220 45, 305 65, 280 125 C260 170, 200 150, 160 120 Z" fill="url(#goldSatin)" stroke="#734d05" stroke-width="1"/>
+                    <path d="M160 120 C200 85, 275 95, 252 125 Z" fill="url(#darkGold)" opacity="0.2"/>
+                    <rect x="115" y="90" width="70" height="60" rx="30" fill="url(#goldSatin)" stroke="#734d05" stroke-width="1"/>
+                    <path d="M115 120 C132 124, 168 124, 185 120" stroke="#845907" stroke-width="1.5" opacity="0.3"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <div class="wedding-content">
+        <header class="hero">
+            <h1>Preet & Diljit</h1>
+            <p>Are getting married</p>
+        </header>
+
+        <!-- <section class="details-section">
+            <h2>Save The Date</h2>
+            <p>We can't wait to celebrate our special day with you.</p>
+            <div class="details-grid">
+                <div class="detail-card">
+                    <h3>When</h3>
+                    <p>September 18, 2026<br>4:00 PM</p>
+                </div>
+                <div class="detail-card">
+                    <h3>Where</h3>
+                    <p>The Grand Orchid Gardens<br>San Francisco, CA</p>
+                </div>
+            </div>
+        </section> -->
+
+        <!-- UPGRADED PUNJABI SAVE THE DATE EXPERIENTIAL SECTION -->
+        <section class="details-section">
+            <div class="punjabi-pattern-overlay"></div>
+            
+            <span class="section-sub-tag">Viah Shagun / Save Our Date</span>
+            <h2 class="invite-section-title">The Auspicious Union</h2>
+            <div class="invite-accent-line mb-3"></div>
+            <p class="section-intro-text">
+                With the blessings of Akal Purakh and our families, the countdown to our forever begins. 
+                Join us as we take our sacred rounds and begin a lifetime of shared laughter, faith, and infinite love.
+            </p>
+            
+            <div class="details-grid">
+                <!-- When Card -->
+                <div class="detail-card">
+                    <div class="card-icon-wrapper">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M8 2V5M16 2V5M3 9H21M5 4H19C20.1046 4 21 4.89543 21 6V20C21 21.1046 20.1046 22 19 22H5C3.89543 22 3 21.1046 3 20V6C3 4.89543 3.89543 4 5 4Z" stroke="#8a1c14" stroke-width="1.5" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <div class="card-inner-content">
+                        <h3>The Subh Muhurat</h3>
+                        <span class="punjabi-date-title">Friday, Sept 18, 2026</span>
+                        <p class="time-stamp">Barat Assembly: 3:30 PM<br>Anand Karaj: 4:00 PM</p>
+                    </div>
+                    <div class="card-corner-accent"></div>
+                </div>
+
+                <!-- Where Card -->
+                <div class="detail-card">
+                    <div class="card-icon-wrapper">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 21C16 17.5 20 13.0182 20 9C20 4.58172 16.4183 1 12 1C7.58172 1 4 4.58172 4 9C4 13.0182 8 17.5 12 21Z" stroke="#8a1c14" stroke-width="1.5"/>
+                            <circle cx="12" cy="9" r="3" stroke="#8a1c14" stroke-width="1.5"/>
+                        </svg>
+                    </div>
+                    <div class="card-inner-content">
+                        <h3>The Wedding Venue</h3>
+                        <span class="venue-main-name">The Grand Orchid Gardens</span>
+                        <p class="venue-address">100 Sanctuary Pavilion Way<br>San Francisco, CA</p>
+                    </div>
+                    <div class="card-corner-accent"></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="invite-story-section">
+            <div class="invite-container-box">
+                <div class="invite-section-header">
+                    <span class="invite-tagline">How It All Began</span>
+                    <h2 class="invite-section-title">Our Love Story</h2>
+                    <div class="invite-accent-line"></div>
+                </div>
+                
+                <div class="invite-story-row">
+                    <div class="invite-story-img-col">
+                        <img src="https://images.pexels.com/photos/16677660/pexels-photo-16677660/free-photo-of-bride-and-groom-in-traditional-clothing.jpeg?auto=format&fit=crop&q=80&w=800" alt="The Couple" class="invite-story-photo">
+                    </div>
+                    <div class="invite-story-text-col">
+                        <h3 class="invite-story-subtitle">Two Hearts, One Journey</h3>
+                        <p class="invite-story-paragraph">
+                            From a chance meeting over a cup of coffee to countless late-night conversations and shared adventures, our paths aligned in the most beautiful way. We discovered a friendship that grew into an unbreakable bond, built on laughter, trust, and shared dreams.
+                        </p>
+                        <p class="invite-story-paragraph">
+                            Now, as we stand on the threshold of this beautiful new chapter, we are thrilled to make a lifelong promise to each other in the presence of those we hold dearest.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- <section class="invite-schedule-section">
+            <div class="invite-container-box">
+                <div class="invite-section-header">
+                    <span class="invite-tagline">Join Us For The Celebrations</span>
+                    <h2 class="invite-section-title">Wedding Functions</h2>
+                    <div class="invite-accent-line"></div>
+                </div>
+
+                <div class="invite-events-grid">
+                    <div class="invite-event-card">
+                        <div class="invite-event-image-holder">
+                            <img src="https://images.unsplash.com/photo-1607185461494-b26a635848bb?auto=format&fit=crop&q=80&w=500" alt="Engagement Ceremony">
+                            <span class="invite-event-badge">Day 01</span>
+                        </div>
+                        <div class="invite-event-details">
+                            <h3 class="invite-event-name">The Engagement</h3>
+                            <div class="invite-event-meta">
+                                <span class="invite-meta-item">📅 Sept 16, 2026</span>
+                                <span class="invite-meta-item">⏰ 6:00 PM onwards</span>
+                            </div>
+                            <p class="invite-event-desc">Witness the official ring exchange ceremony followed by an evening of music, cocktails, and family celebrations.</p>
+                            <div class="invite-venue-tag">The Crystal Ballroom, Palace Hotel</div>
+                        </div>
+                    </div>
+
+                    <div class="invite-event-card">
+                        <div class="invite-event-image-holder">
+                            <img src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&q=80&w=500" alt="Mehndi Ceremony">
+                            <span class="invite-event-badge">Day 02</span>
+                        </div>
+                        <div class="invite-event-details">
+                            <h3 class="invite-event-name">Mehndi Ceremony</h3>
+                            <div class="invite-event-meta">
+                                <span class="invite-meta-item">📅 Sept 17, 2026</span>
+                                <span class="invite-meta-item">⏰ 11:00 AM</span>
+                            </div>
+                            <p class="invite-event-desc">A vibrant morning filled with delicate henna designs, traditional folk songs, and colorful courtyard decorations.</p>
+                            <div class="invite-venue-tag">The Poolside Pavilion, Grand Resort</div>
+                        </div>
+                    </div>
+
+                    <div class="invite-event-card">
+                        <div class="invite-event-image-holder">
+                            <img src="https://images.unsplash.com/photo-1610030469668-93535c17b6b3?auto=format&fit=crop&q=80&w=500" alt="Haldi Ceremony">
+                            <span class="invite-event-badge">Day 02</span>
+                        </div>
+                        <div class="invite-event-details">
+                            <h3 class="invite-event-name">Haldi Ceremony</h3>
+                            <div class="invite-event-meta">
+                                <span class="invite-meta-item">📅 Sept 17, 2026</span>
+                                <span class="invite-meta-item">⏰ 4:00 PM</span>
+                            </div>
+                            <p class="invite-event-desc">Dress in shades of yellow and help us apply the auspicious turmeric paste amidst joyful music and dhol beats.</p>
+                            <div class="invite-venue-tag">The Mango Orchards, Grand Resort</div>
+                        </div>
+                    </div>
+
+                    <div class="invite-event-card invite-highlight-card">
+                        <div class="invite-event-image-holder">
+                            <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=500" alt="Wedding Day Ceremony">
+                            <span class="invite-event-badge gold-badge">The Big Day</span>
+                        </div>
+                        <div class="invite-event-details">
+                            <h3 class="invite-event-name">The Wedding Day</h3>
+                            <div class="invite-event-meta">
+                                <span class="invite-meta-item">📅 Sept 18, 2026</span>
+                                <span class="invite-meta-item">⏰ 4:00 PM</span>
+                            </div>
+                            <p class="invite-event-desc">Join us as we take our sacred marriage vows, followed directly by an elegant banquet dinner and celebratory dance reception.</p>
+                            <div class="invite-venue-tag">The Grand Orchid Sanctuary, San Francisco</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section> -->
+
+        <!-- REDESIGNED INTERACTIVE PUNJABI WEDDING FUNCTIONS BANNER -->
+        <section class="invite-schedule-section">
+            <div class="invite-container-box">
+                
+                <div class="invite-section-header">
+                    <span class="invite-tagline">Join Us For The Celebrations</span>
+                    <h2 class="invite-section-title">Wedding Functions</h2>
+                    <div class="invite-accent-line"></div>
+                </div>
+
+                <div class="schedule-interactive-wrapper">
+                    <!-- LEFT COLUMN: Event Selector Tabs -->
+                    <div class="schedule-tabs-column">
+                        <button class="schedule-tab-btn active" onclick="switchEvent(event, 'engagement')">
+                            <span class="tab-day">Day 01</span>
+                            <span class="tab-name">The Roka & Engagement</span>
+                        </button>
+                        
+                        <button class="schedule-tab-btn" onclick="switchEvent(event, 'mehndi')">
+                            <span class="tab-day">Day 02 • Morning</span>
+                            <span class="tab-name">Mehndi Ceremony</span>
+                        </button>
+                        
+                        <button class="schedule-tab-btn" onclick="switchEvent(event, 'haldi')">
+                            <span class="tab-day">Day 02 • Afternoon</span>
+                            <span class="tab-name">Maiyan & Haldi</span>
+                        </button>
+                        
+                        <button class="schedule-tab-btn highlight-tab" onclick="switchEvent(event, 'wedding')">
+                            <span class="tab-day">Day 03 • The Big Day</span>
+                            <span class="tab-name">Anand Karaj & Viah</span>
+                        </button>
+                    </div>
+
+                    <!-- RIGHT COLUMN: Dynamic Display Panels -->
+                    <div class="schedule-display-column">
+                        
+                        <!-- Panel 1: Engagement (Active by Default) -->
+                        <div id="engagement" class="event-display-panel active">
+                            <div class="panel-image-wrapper">
+                                <img src="https://images.pexels.com/photos/17607865/pexels-photo-17607865.jpeg?auto=format&fit=crop&q=80&w=800" alt="Engagement Ceremony">
+                            </div>
+                            <div class="panel-info-content">
+                                <h3>The Roka & Engagement</h3>
+                                <div class="panel-meta-row">
+                                    <span>📅 Sept 16, 2026</span>
+                                    <span>⏰ 6:00 PM Onwards</span>
+                                </div>
+                                <!-- <p class="panel-description">
+                                    Witness the official ring exchange ceremony and traditional Shagun rituals. Get ready for a vibrant night filled with formal cocktails, family dance performances, and festive dinner arrangements.
+                                </p> -->
+                                <div class="panel-venue-box">
+                                    <strong>📍 Venue:</strong> The Crystal Ballroom, Palace Hotel
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Panel 2: Mehndi -->
+                        <div id="mehndi" class="event-display-panel">
+                            <div class="panel-image-wrapper">
+                                <img src="https://images.pexels.com/photos/11733344/pexels-photo-11733344.jpeg?auto=format&fit=crop&q=80&w=800" alt="Mehndi Ceremony">
+                            </div>
+                            <div class="panel-info-content">
+                                <h3>Mehndi Ceremony</h3>
+                                <div class="panel-meta-row">
+                                    <span>📅 Sept 17, 2026</span>
+                                    <span>⏰ 11:00 AM</span>
+                                </div>
+                                <!-- <p class="panel-description">
+                                    A colorful, sun-kissed morning celebration! Let the intricate henna stains apply to your hands while enjoying traditional Punjabi boliyan folk songs, refreshing cocktails, and festive street food.
+                                </p> -->
+                                <div class="panel-venue-box">
+                                    <strong>📍 Venue:</strong> The Poolside Pavilion, Grand Resort
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Panel 3: Haldi -->
+                        <div id="haldi" class="event-display-panel">
+                            <div class="panel-image-wrapper">
+                                <img src="https://images.pexels.com/photos/29492597/pexels-photo-29492597.jpeg?auto=format&fit=crop&q=80&w=800" alt="Haldi Ceremony">
+                            </div>
+                            <div class="panel-info-content">
+                                <h3>Maiyan & Haldi</h3>
+                                <div class="panel-meta-row">
+                                    <span>📅 Sept 17, 2026</span>
+                                    <span>⏰ 4:00 PM</span>
+                                </div>
+                                <!-- <p class="panel-description">
+                                    Dress up in your favorite shades of yellow! Help us smear the auspicious turmeric paste over the bride and groom amidst loud dhol beats, high-energy dancing, and playful family rivalries.
+                                </p> -->
+                                <div class="panel-venue-box">
+                                    <strong>📍 Venue:</strong> The Mango Orchards, Grand Resort
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Panel 4: Wedding Day -->
+                        <div id="wedding" class="event-display-panel">
+                            <div class="panel-image-wrapper">
+                                <img src="ban-punjabi.avif?auto=format&fit=crop&q=80&w=800" alt="Wedding Day Ceremony">
+                            </div>
+                            <div class="panel-info-content">
+                                <h3>Anand Karaj & Grand Reception</h3>
+                                <div class="panel-meta-row">
+                                    <span>📅 Sept 18, 2026</span>
+                                    <span>⏰ 4:00 PM</span>
+                                </div>
+                                <!-- <p class="panel-description">
+                                    Join us for the most sacred hour as we take our lavaan rounds around the Guru Granth Sahib. The holy Anand Karaj ceremony will be followed immediately by a grand dinner reception party.
+                                </p> -->
+                                <div class="panel-venue-box gold-venue">
+                                    <strong>📍 Venue:</strong> The Grand Orchid Sanctuary, San Francisco
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- COHESIVE REGAL WEDDING FOOTER -->
+      <!-- REGAL MAROON INVERTED WEDDING FOOTER -->
+
+    </div>
+<footer class="wedding-footer maroon-theme">
+    <div class="footer-decorative-divider">
+        <span class="divider-line"></span>
+        <!-- <span class="divider-cluster">✨ 🌸 ✨</span> -->
+        <span class="divider-line"></span>
+    </div>
+    
+    <div class="footer-content">
+        <!-- <h3 class="footer-monogram">P & D</h3> -->
+        <p class="footer-blessing">#PreetFoundHisDiljeet • With hearts full of gratitude, we look forward to celebrating with you!</p>
+        
+        <div class="footer-meta">
+            <p class="made-with-love">Made with love By • Komal Babar</p>
+            <p class="hashtag-reminder">Please share your moments using our hashtag!</p>
+        </div>
+    </div>
+</footer>
+    <script>
+        function openCurtains() {
+            const intro = document.getElementById('introContainer');
+            intro.classList.add('opened');
+            
+            // Allow the main window layout to become scrollable
+            document.body.classList.add('allow-scroll');
+        }
+        function switchEvent(event, eventId) {
+    // 1. Fetch all panels and navigation tab keys
+    const panels = document.querySelectorAll('.event-display-panel');
+    const tabs = document.querySelectorAll('.schedule-tab-btn');
+
+    // 2. Clear out active styling conditions
+    panels.forEach(panel => panel.classList.remove('active'));
+    tabs.forEach(tab => tab.classList.remove('active'));
+
+    // 3. Mount current active tags based on selection
+    document.getElementById(eventId).classList.add('active');
+    event.currentTarget.classList.add('active');
+}
+    </script>
+</body>
+</html>

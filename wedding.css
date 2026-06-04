@@ -1,0 +1,519 @@
+/* ==========================================================================
+   Wedding Invitation Layout System - Content Stylesheet
+   ========================================================================== */
+
+/* Variable Definitions Root */
+:root {
+    --invite-bg-warm: #fcf8f5;
+    --invite-card-bg: #ffffff;
+    --invite-burgundy: #8a1c14;
+    --invite-burgundy-light: #fbeee4;
+    --invite-gold-deep: #9a6b10;
+    --invite-gold-mid: #dfba54;
+    --invite-txt-dark: #3a3a3a;
+    --invite-txt-muted: #7c7c7c;
+    --invite-shadow-soft: 0 10px 30px rgba(138, 28, 20, 0.05);
+    --invite-shadow-bold: 0 15px 40px rgba(0, 0, 0, 0.08);
+}
+
+/* Base structural adjustments for content wrapper */
+.wedding-content-wrapper {
+    opacity: 0;
+    transform: scale(0.98);
+    transition: opacity 1.5s ease 0.5s, transform 1.5s ease 0.5s;
+    width: 100%;
+    min-height: 100vh;
+    background-color: var(--invite-bg-warm);
+}
+
+/* Reveal transition trigger container link */
+.opened + .wedding-content-wrapper {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Shared structural container constraints */
+.invite-container-box {
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+/* Universal Section Headers */
+.invite-section-header {
+    text-align: center;
+    margin-bottom: 55px;
+}
+
+.invite-tagline {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: var(--invite-gold-deep);
+    font-weight: 600;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.invite-section-title {
+    font-family: 'Alex Brush', cursive;
+    font-size: 3.8rem;
+    color: var(--invite-burgundy);
+    line-height: 1.1;
+}
+
+.invite-accent-line {
+    width: 60px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--invite-gold-mid), transparent);
+    margin: 15px auto 0 auto;
+}
+
+
+/* --- 1. Hero Cover Banner Layout --- */
+.invite-hero-banner {
+    position: relative;
+    height: 90vh;
+    min-height: 550px;
+    background: url('https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=1920') no-repeat center center/cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    border-radius: 0 0 24px 24px;
+    overflow: hidden;
+    box-shadow: var(--invite-shadow-bold);
+    margin: 0 12px;
+}
+
+.invite-hero-tint {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.45) 100%);
+    z-index: 1;
+}
+
+.invite-hero-content {
+    position: relative;
+    z-index: 2;
+    color: #ffffff;
+    padding: 0 20px;
+}
+
+.invite-sub-badge {
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 5px;
+    font-weight: 300;
+    display: block;
+    margin-bottom: 15px;
+    text-shadow: 1px 1px 4px rgba(0,0,0,0.4);
+}
+
+.invite-main-title {
+    font-family: 'Alex Brush', cursive;
+    font-size: 6rem;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
+    line-height: 1.2;
+}
+
+@media(max-width: 768px) {
+    .invite-main-title { font-size: 4.2rem; }
+}
+
+.invite-title-divider {
+    width: 120px;
+    height: 1px;
+    background-color: rgba(255, 255, 255, 0.6);
+    margin: 20px auto;
+}
+
+.invite-hero-date {
+    font-size: 1.4rem;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    font-weight: 400;
+    text-shadow: 1px 1px 4px rgba(0,0,0,0.4);
+}
+
+
+/* --- 2. Love Story Layout Module --- */
+.invite-story-section {
+    padding: 80px 0;
+    background-color: var(--invite-bg-warm);
+}
+
+.invite-story-row {
+    display: flex;
+    align-items: center;
+    gap: 60px;
+}
+
+.invite-story-img-col {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.invite-story-photo {
+    width: 100%;
+    max-width: 450px;
+    height: 500px;
+    object-fit: cover;
+    border-radius: 200px 200px 24px 24px; /* Soft arched silhouette window */
+    box-shadow: var(--invite-shadow-bold);
+    border: 8px solid var(--invite-card-bg);
+}
+
+.invite-story-text-col {
+    flex: 1.2;
+}
+
+.invite-story-subtitle {
+    font-size: 1.8rem;
+    color: var(--invite-burgundy);
+    margin-bottom: 20px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+
+.invite-story-paragraph {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: var(--invite-txt-dark);
+    margin-bottom: 20px;
+    font-weight: 300;
+}
+
+@media(max-width: 868px) {
+    .invite-story-row { flex-direction: column; gap: 40px; }
+    .invite-story-photo { height: 380px; }
+    .invite-story-text-col { text-align: center; }
+}
+
+
+/* --- 3. Functions / Event Schedule Cards Layout --- */
+/* .invite-schedule-section {
+    padding: 100px 0;
+    background-color: var(--invite-burgundy-light);
+    border-radius: 32px;
+    margin: 0 12px;
+}
+
+.invite-events-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+}
+
+.invite-event-card {
+    background-color: var(--invite-card-bg);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: var(--invite-shadow-soft);
+    border: 1px solid rgba(138, 28, 20, 0.05);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    display: flex;
+    flex-direction: column;
+} 
+
+.invite-event-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--invite-shadow-bold);
+}
+
+.invite-event-image-holder {
+    position: relative;
+    height: 200px;
+    width: 100%;
+    overflow: hidden;
+}
+
+.invite-event-image-holder img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+}
+
+.invite-event-card:hover .invite-event-image-holder img {
+    transform: scale(1.06);
+}
+
+.invite-event-badge {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    background-color: var(--invite-burgundy);
+    color: #ffffff;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    padding: 6px 14px;
+    border-radius: 30px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.invite-event-badge.gold-badge {
+    background: linear-gradient(135deg, var(--invite-gold-deep), var(--invite-gold-mid));
+    color: #ffffff;
+}
+
+.invite-event-details {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.invite-event-name {
+    font-size: 1.35rem;
+    color: var(--invite-burgundy);
+    margin-bottom: 12px;
+    font-weight: 600;
+}
+
+.invite-event-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 15px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: var(--invite-gold-deep);
+}
+
+.invite-event-desc {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--invite-txt-dark);
+    margin-bottom: 20px;
+    font-weight: 300;
+    flex-grow: 1;
+}
+
+.invite-venue-tag {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--invite-txt-muted);
+    border-top: 1px dashed rgba(0,0,0,0.1);
+    padding-top: 12px;
+    margin-top: auto;
+}*/
+
+/* --- REDESIGNED INTERACTIVE SCHEDULE SYSTEM --- */
+.invite-schedule-section {
+    padding: 100px 20px;
+    background-color: #fcf8f5;
+}
+
+.schedule-interactive-wrapper {
+    display: flex;
+    gap: 40px;
+    max-width: 1100px;
+    margin: 40px auto 0 auto;
+    align-items: flex-start;
+}
+
+/* Left Navigation Buttons Stack */
+.schedule-tabs-column {
+    flex: 0 0 350px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.schedule-tab-btn {
+    background: #ffffff;
+    border: 1px solid rgba(223, 186, 84, 0.25);
+    padding: 20px 25px;
+    border-radius: 8px;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.25, 1, 0.3, 1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02);
+}
+
+.schedule-tab-btn .tab-day {
+    display: block;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    color: #dfba54;
+    font-weight: 600;
+    margin-bottom: 4px;
+    letter-spacing: 1.5px;
+}
+
+.schedule-tab-btn .tab-name {
+    display: block;
+    font-size: 1.1rem;
+    color: #4a4a4a;
+    font-weight: 600;
+}
+
+/* Hover and Active Select States */
+.schedule-tab-btn:hover {
+    transform: translateX(6px);
+    border-color: #8a1c14;
+}
+
+.schedule-tab-btn.active {
+    background: #8a1c14;
+    border-color: #8a1c14;
+    transform: translateX(10px);
+    box-shadow: 0 10px 20px rgba(138, 28, 20, 0.15);
+}
+
+.schedule-tab-btn.active .tab-day {
+    color: #fbf5b7;
+}
+
+.schedule-tab-btn.active .tab-name {
+    color: #ffffff;
+}
+
+/* Distinctive Highlight for Main Wedding Day Tab */
+.highlight-tab {
+    border-left: 4px solid #dfba54;
+}
+
+/* Right Content Presentation Screen */
+.schedule-display-column {
+    flex: 1;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(223, 186, 84, 0.15);
+    overflow: hidden;
+    min-height: 440px;
+    position: relative;
+}
+
+/* Dynamic Hidden/Visible States for Smooth Interactions */
+.event-display-panel {
+    display: none;
+    opacity: 0;
+    flex-direction: column;
+    height: 100%;
+}
+
+.event-display-panel.active {
+    display: flex;
+    animation: fadeInPanel 0.5s ease forwards;
+}
+
+@keyframes fadeInPanel {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.panel-image-wrapper {
+    width: 100%;
+    height: 250px;
+    overflow: hidden;
+}
+
+.panel-image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.panel-info-content {
+    padding: 35px;
+}
+
+.panel-info-content h3 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.6rem;
+    color: #8a1c14;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.panel-meta-row {
+    display: flex;
+    gap: 20px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #dfba54;
+    margin-bottom: 20px;
+}
+
+.panel-description {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: #555555;
+    margin-bottom: 25px;
+}
+
+.panel-venue-box {
+    background: #fbf8f5;
+    padding: 15px 20px;
+    border-radius: 6px;
+    border-left: 3px solid #8a1c14;
+    font-size: 0.95rem;
+    color: #333333;
+}
+
+.panel-venue-box.gold-venue {
+    background: #fffdf2;
+    border-left-color: #dfba54;
+}
+
+/* Responsive Mobile Configurations */
+@media (max-width: 900px) {
+    .schedule-interactive-wrapper {
+        flex-direction: column;
+    }
+    .schedule-tabs-column {
+        width: 100%;
+        flex: none;
+    }
+    .schedule-tab-btn.active {
+        transform: translateY(-2px);
+    }
+}
+
+
+
+
+/* Wedding Day Special Accent Border Card highlight */
+.invite-highlight-card {
+    border: 2px solid var(--invite-gold-mid);
+}
+
+
+/* --- 4. Main Footnote Footer Layout --- */
+.invite-main-footer {
+    text-align: center;
+    padding: 100px 24px;
+    background-color: var(--invite-bg-warm);
+}
+
+.invite-footer-monogram {
+    font-family: 'Alex Brush', cursive;
+    font-size: 4rem;
+    color: var(--invite-burgundy);
+    margin-bottom: 10px;
+}
+
+.invite-footer-blurb {
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+    color: var(--invite-txt-dark);
+    margin-bottom: 25px;
+    font-weight: 400;
+}
+
+.invite-footer-subtext {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--invite-txt-muted);
+}

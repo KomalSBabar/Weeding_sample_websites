@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Covenant: Julian & Claire</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Playfair+Display:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-cream: #FDFBF7;
+            --deep-extract: #1A2421;
+            --rose-petal: #F5E3E5;
+            --lily-blush: #E2B2B8;
+            --sage-tint: #D6E0DB;
+            --muted-gold: #C5A059;
+            
+            --font-display: 'Cinzel Decorative', serif;
+            --font-editorial: 'Playfair Display', serif;
+            --font-body: 'Cormorant Garamond', serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-cream);
+            color: var(--deep-extract);
+            font-family: var(--font-body);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* --- DECONSTRUCTED HERO ART CANVAS --- */
+        .zine-hero {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle at 80% 20%, var(--rose-petal) 0%, transparent 50%),
+                        radial-gradient(circle at 10% 80%, var(--sage-tint) 0%, transparent 60%);
+        }
+
+        /* Asymmetric overlapping layout elements */
+        .hero-image-frame {
+            position: absolute;
+            right: 10%;
+            top: 12%;
+            width: 35vw;
+            height: 75vh;
+            overflow: hidden;
+            border-radius: 400px 400px 0 0;
+            box-shadow: -20px 30px 60px rgba(26, 36, 33, 0.15);
+            z-index: 2;
+        }
+
+        .hero-image-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: contrast(1.05) sepia(10%);
+        }
+
+        .hero-title-group {
+            position: absolute;
+            left: 8%;
+            z-index: 3;
+            max-width: 65vw;
+            pointer-events: none;
+        }
+
+        .hero-pretitle {
+            font-family: var(--font-body);
+            font-style: italic;
+            font-size: 1.8rem;
+            color: var(--muted-gold);
+            margin-bottom: 10px;
+        }
+
+        .hero-main-title {
+            font-family: var(--font-display);
+            font-size: 6.5rem;
+            line-height: 1.0;
+            font-weight: 700;
+            color: var(--deep-extract);
+            text-shadow: 2px 2px 0px var(--bg-cream);
+        }
+
+        .hero-main-title span {
+            display: block;
+            font-family: var(--font-editorial);
+            font-style: italic;
+            font-weight: 400;
+            font-size: 5.5rem;
+            padding-left: 3rem;
+            color: #4A5854;
+        }
+
+        .hero-meta {
+            margin-top: 40px;
+            font-family: var(--font-editorial);
+            font-size: 1.2rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            border-left: 2px solid var(--lily-blush);
+            padding-left: 20px;
+        }
+
+        /* Floating Absolute Botanical Accents */
+        .botanical-accent-1 {
+            position: absolute;
+            left: -5%; top: 20%;
+            width: 25vw;
+            opacity: 0.12;
+            transform: rotate(45deg);
+            pointer-events: none;
+        }
+
+        /* --- THE FLOATING ASYMMETRIC JOURNAL --- */
+        .journal-section {
+            padding: 200px 8% 100px 8%;
+            position: relative;
+        }
+
+        .journal-container {
+            display: flex;
+            position: relative;
+            align-items: center;
+        }
+
+        .journal-text {
+            width: 50%;
+            padding-right: 5%;
+            z-index: 2;
+        }
+
+        .journal-tag {
+            font-family: var(--font-editorial);
+            font-style: italic;
+            color: var(--muted-gold);
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .journal-quote {
+            font-family: var(--font-editorial);
+            font-size: 3rem;
+            line-height: 1.3;
+            margin-bottom: 40px;
+            font-weight: 400;
+        }
+
+        .journal-body {
+            font-size: 1.4rem;
+            line-height: 1.8;
+            color: #3B4542;
+        }
+
+        .journal-visual-collage {
+            width: 50%;
+            position: relative;
+            height: 700px;
+        }
+
+        /* Abstract structural placement over boxes */
+        .collage-img-main {
+            position: absolute;
+            top: 0; right: 0;
+            width: 75%; height: 80%;
+            object-fit: cover;
+            box-shadow: 30px 30px 80px rgba(0,0,0,0.1);
+        }
+
+        .collage-img-sub {
+            position: absolute;
+            bottom: 0; left: -10%;
+            width: 55%; height: 50%;
+            object-fit: cover;
+            border: 15px solid var(--bg-cream);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            z-index: 3;
+        }
+
+        /* --- THE LITURGICAL ZIGZAG IMMERSION --- */
+        .ritual-zine-section {
+            padding: 150px 0;
+            background-color: #F4F6F4; /* Light sage undertone canvas shift */
+            position: relative;
+        }
+
+        .zine-section-header {
+            text-align: center;
+            margin-bottom: 120px;
+        }
+
+        .zine-title {
+            font-family: var(--font-display);
+            font-size: 4rem;
+            color: var(--deep-extract);
+        }
+
+        /* Staggered dynamic timeline stream */
+        .ritual-stream {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 180px;
+        }
+
+        .stream-node {
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+
+        .stream-node:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        .node-graphic {
+            width: 45%;
+            position: relative;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* Circular framing interacting with pink lily branch elements */
+        .node-circle-frame {
+            width: 380px;
+            height: 380px;
+            border-radius: 50%;
+            overflow: hidden;
+            position: relative;
+            border: 1px solid var(--lily-blush);
+        }
+
+        .node-circle-frame img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+
+        .stream-node:hover .node-circle-frame img {
+            transform: scale(1.08) rotate(2deg);
+        }
+
+        .node-leaf-overlay {
+            position: absolute;
+            width: 200px;
+            opacity: 0.8;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .stream-node:nth-child(odd) .node-leaf-overlay {
+            bottom: -50px; right: 20px;
+        }
+
+        .stream-node:nth-child(even) .node-leaf-overlay {
+            top: -50px; left: 20px;
+            transform: scaleX(-1);
+        }
+
+        .node-content {
+            width: 55%;
+            padding: 0 8%;
+        }
+
+        .node-num {
+            font-family: var(--font-editorial);
+            font-style: italic;
+            font-size: 1.5rem;
+            color: var(--muted-gold);
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .node-heading {
+            font-family: var(--font-editorial);
+            font-size: 2.8rem;
+            font-weight: 400;
+            margin-bottom: 25px;
+            color: var(--deep-extract);
+        }
+
+        .node-text {
+            font-size: 1.3rem;
+            line-height: 1.8;
+            color: #444E4B;
+        }
+
+        /* --- DYNAMIC ARCHITECTURAL TIMELINE SHIFT --- */
+        .time-zine-section {
+            padding: 200px 5%;
+            background: linear-gradient(to bottom, #F4F6F4, var(--bg-cream));
+        }
+
+        .time-asymmetric-split {
+            max-width: 1300px;
+            margin: 0 auto;
+            display: flex;
+            gap: 100px;
+        }
+
+        .time-left-sticky {
+            flex: 0.8;
+            position: sticky;
+            top: 10%;
+            height: fit-content;
+        }
+
+        .sticky-headline {
+            font-family: var(--font-display);
+            font-size: 3.5rem;
+            line-height: 1.2;
+            color: var(--deep-extract);
+        }
+
+        .sticky-headline span {
+            display: block;
+            font-family: var(--font-body);
+            font-style: italic;
+            font-size: 2.2rem;
+            color: var(--lily-blush);
+            margin-top: 20px;
+        }
+
+        .time-right-scroll {
+            flex: 1.2;
+            display: flex;
+            flex-direction: column;
+            gap: 60px;
+        }
+
+        /* Clean luxury plate instead of standard card blocks */
+        .time-block-plate {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-left: 3px solid var(--lily-blush);
+            padding: 60px;
+            box-shadow: 10px 15px 40px rgba(0, 0, 0, 0.02);
+            transition: all 0.4s ease;
+        }
+
+        .time-block-plate:hover {
+            background: #FFFFFF;
+            border-left-color: var(--muted-gold);
+            transform: translateX(10px);
+        }
+
+        .plate-hour {
+            font-family: var(--font-editorial);
+            font-size: 1.3rem;
+            color: var(--muted-gold);
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+        }
+
+        .plate-title {
+            font-family: var(--font-editorial);
+            font-size: 2.4rem;
+            font-weight: 400;
+            margin-bottom: 15px;
+            color: var(--deep-extract);
+        }
+
+        .plate-loc {
+            font-family: var(--font-body);
+            font-style: italic;
+            font-size: 1.4rem;
+            color: #6C7A76;
+            margin-bottom: 25px;
+            display: block;
+        }
+
+        .plate-desc {
+            font-size: 1.25rem;
+            line-height: 1.7;
+            color: #4A5451;
+        }
+
+        /* --- IMMERSIVE WRAP FOOTER --- */
+        .zine-footer {
+            background-color: var(--deep-extract);
+            color: var(--bg-cream);
+            padding: 140px 5px 60px 5px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .footer-monogram {
+            font-family: var(--font-display);
+            font-size: 7rem;
+            opacity: 0.1;
+            position: absolute;
+            top: 20px; left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+        }
+
+        .footer-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .footer-heading {
+            font-family: var(--font-display);
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            letter-spacing: 4px;
+        }
+
+        .footer-sub {
+            font-family: var(--font-editorial);
+            font-style: italic;
+            font-size: 1.4rem;
+            color: var(--lily-blush);
+            margin-bottom: 80px;
+        }
+
+        .footer-credits {
+            font-family: var(--font-editorial);
+            font-size: 0.8rem;
+            letter-spacing: 3px;
+            opacity: 0.5;
+            border-top: 1px solid rgba(253, 251, 247, 0.1);
+            padding-top: 40px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* --- RESPONSIVE ADAPTATION --- */
+        @media (max-width: 1024px) {
+            .hero-main-title { font-size: 4rem; }
+            .hero-main-title span { font-size: 3.2rem; }
+            .hero-image-frame { width: 45vw; }
+            .journal-container { flex-direction: column; gap: 60px; }
+            .journal-text { width: 100%; padding: 0; }
+            .journal-visual-collage { width: 100%; height: 500px; }
+            .stream-node, .stream-node:nth-child(even) { flex-direction: column; gap: 40px; }
+            .node-graphic, .node-content { width: 100%; text-align: center; }
+            .time-asymmetric-split { flex-direction: column; }
+            .time-left-sticky { position: relative; }
+        }
+  
+    
+
+    /* --- EXTENDED EDITORIAL ENGINE STYLES --- */
+    .ritual-zine-section {
+        padding: 180px 0;
+        background-color: #FAF8F5;
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* Moving background ambient watercolor layout layers */
+    .ambient-glow-cloud {
+        position: absolute;
+        width: 60vw;
+        height: 60vw;
+        border-radius: 50%;
+        filter: blur(140px);
+        opacity: 0.4;
+        pointer-events: none;
+        z-index: 1;
+        mix-blend-mode: multiply;
+        animation: cloudDrift 25s infinite ease-in-out alternate;
+    }
+
+    .glow-pink {
+        background: radial-gradient(circle, rgba(245,227,229,0.8) 0%, transparent 70%);
+        top: -10%; left: -20%;
+    }
+
+    .glow-sage {
+        background: radial-gradient(circle, rgba(214,224,219,0.7) 0%, transparent 70%);
+        bottom: 10%; right: -20%;
+        animation-delay: -5s;
+    }
+
+    .zine-section-header {
+        position: relative;
+        text-align: center;
+        margin-bottom: 140px;
+        z-index: 5;
+    }
+
+    .header-line-accent {
+        width: 80px;
+        height: 1px;
+        background: linear-gradient(to right, transparent, var(--lily-blush), transparent);
+        margin: 25px auto 0 auto;
+    }
+
+    .ritual-stream {
+        max-width: 1400px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 160px;
+        position: relative;
+        z-index: 5;
+    }
+
+    .stream-node {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        transition: all 0.5s ease;
+    }
+
+    .stream-node:nth-child(even) {
+        flex-direction: row-reverse;
+    }
+
+    .node-graphic {
+        width: 45%;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .node-circle-frame {
+        width: 360px;
+        height: 360px;
+        border-radius: 50%;
+        overflow: hidden;
+        position: relative;
+        z-index: 4;
+        border: 1px solid rgba(253, 251, 247, 0.6);
+        box-shadow: 0 20px 50px rgba(26, 36, 33, 0.12);
+        transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .node-circle-frame img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.7s ease;
+    }
+
+    /* --- THE INTERACTIVE ANIMATION ELEMENTS --- */
+    
+    /* Elegant fine-lined spinning halo ring around the portrait */
+    .animated-halo {
+        position: absolute;
+        width: 400px;
+        height: 400px;
+        border-radius: 50%;
+        border: 1px dashed rgba(226, 178, 184, 0.6);
+        z-index: 2;
+        animation: fineRotation 35s linear infinite;
+        pointer-events: none;
+        transition: all 0.5s ease;
+    }
+
+    .animated-halo::before {
+        content: '';
+        position: absolute;
+        top: -4px; left: 50%;
+        width: 8px; height: 8px;
+        background-color: var(--muted-gold);
+        border-radius: 50%;
+        box-shadow: 0 0 12px var(--muted-gold);
+    }
+
+    .inverse-turn {
+        animation: fineRotationInverse 40s linear infinite;
+        border: 1px dashed rgba(143, 164, 153, 0.5);
+    }
+
+    /* Abstract background blooming vector mimic */
+    .floating-petal-aura {
+        position: absolute;
+        width: 420px;
+        height: 380px;
+        background: radial-gradient(ellipse at center, rgba(245, 227, 229, 0.4) 0%, transparent 65%);
+        border-radius: 43% 57% 41% 59% / 57% 45% 55% 43%;
+        z-index: 1;
+        pointer-events: none;
+        transition: all 0.6s ease;
+    }
+
+    .speed-slow { animation: organicMorph 12s infinite ease-in-out alternate; }
+    .speed-fast { animation: organicMorph 9s infinite ease-in-out alternate-reverse; }
+
+    /* --- HOVER INTERACTION STATES --- */
+    .stream-node:hover .node-circle-frame {
+        transform: scale(1.04) translateY(-5px);
+        box-shadow: 0 30px 60px rgba(226, 178, 184, 0.25);
+    }
+
+    .stream-node:hover .node-circle-frame img {
+        transform: scale(1.06);
+    }
+
+    .stream-node:hover .animated-halo {
+        border-color: var(--muted-gold);
+        width: 410px;
+        height: 410px;
+    }
+
+    .stream-node:hover .floating-petal-aura {
+        background: radial-gradient(ellipse at center, rgba(216, 224, 219, 0.6) 0%, transparent 70%);
+        transform: scale(1.15);
+    }
+
+    .node-content {
+        width: 55%;
+        padding: 0 10%;
+        z-index: 5;
+        transition: transform 0.5s ease;
+    }
+
+    .stream-node:hover .node-content {
+        transform: translateX(10px);
+    }
+    
+    .stream-node:nth-child(even):hover .node-content {
+        transform: translateX(-10px);
+    }
+
+    .node-num {
+        font-family: var(--font-editorial);
+        font-style: italic;
+        font-size: 1.4rem;
+        color: var(--muted-gold);
+        margin-bottom: 15px;
+        display: block;
+    }
+
+    .node-heading {
+        font-family: var(--font-editorial);
+        font-size: 2.8rem;
+        font-weight: 400;
+        margin-bottom: 25px;
+        color: var(--deep-extract);
+        letter-spacing: -0.5px;
+    }
+
+    .node-text {
+        font-size: 1.3rem;
+        line-height: 1.8;
+        color: #4A5250;
+        font-weight: 300;
+    }
+
+    /* --- PURE CSS KEYFRAME ANIMATION TIMELINES --- */
+    @keyframes fineRotation {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    @keyframes fineRotationInverse {
+        0% { transform: rotate(360deg); }
+        100% { transform: rotate(0deg); }
+    }
+
+    @keyframes organicMorph {
+        0% { border-radius: 43% 57% 41% 59% / 57% 45% 55% 43%; transform: rotate(0deg) scale(1); }
+        50% { border-radius: 60% 40% 65% 35% / 40% 60% 40% 60%; transform: scale(1.05); }
+        100% { border-radius: 40% 60% 38% 62% / 55% 38% 62% 45%; transform: rotate(180deg) scale(0.95); }
+    }
+
+    @keyframes cloudDrift {
+        0% { transform: translate(0, 0) scale(1); }
+        100% { transform: translate(8vw, 5vh) scale(1.15); }
+    }
+
+    /* Responsive scaling changes */
+    @media (max-width: 1024px) {
+        .stream-node, .stream-node:nth-child(even) {
+            flex-direction: column !important;
+            gap: 50px;
+        }
+        .node-graphic, .node-content {
+            width: 100%;
+            text-align: center;
+        }
+        .animated-halo, .floating-petal-aura {
+            display: none; /* Strip extreme details on smaller viewports to protect core layout weights */
+        }
+    }
+</style>
+</head>
+<body>
+
+    <!-- ABSTRACT INTRODUCTORY CANVAS -->
+    <main class="zine-hero">
+        <!-- Floating clean natural abstract lilies backgrounds -->
+        <img src="https://images.unsplash.com/photo-1596436889106-be35e843f974?auto=format&fit=crop&q=80&w=800" alt="Lily Leaf Accent" class="botanical-accent-1">
+        
+        <div class="hero-title-group">
+            <p class="hero-pretitle">The Holy Union Covenant</p>
+            <h1 class="hero-main-title">JULIAN<span>& CLAIRE</span></h1>
+            <p class="hero-meta">OCTOBER 17, 2026 • ST. JUDE'S CHAPEL</p>
+        </div>
+
+        <div class="hero-image-frame">
+            <!-- Premium Editorial Main Background Image asset swap -->
+            <img src="https://onehorizonproductions.com/wp-content/uploads/2023/02/Christian-wedding-rituals-23-scaled.webp?auto=format&fit=crop&q=80&w=1200" alt="The Newlyweds">
+        </div>
+    </main>
+
+    <!-- OVERLAPPING JOURNAL PROLOGUE -->
+    <section class="journal-section">
+        <div class="journal-container">
+            <div class="journal-text">
+                <span class="journal-tag">The Narrative</span>
+                <h2 class="journal-quote">"Two separate paths woven eternally under a divine design."</h2>
+                <p class="journal-body">
+                    We welcome you to step into our shared universe. Moving past the individual chapters of yesterday, we assemble to construct a family architecture founded on faith, clarity, and unyielding devotion. This day represents a spiritual covenant witnessed by God and you—our closest family and friends.
+                </p>
+            </div>
+            
+            <div class="journal-visual-collage">
+                <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=800" alt="Ceremony Details" class="collage-img-main">
+                <img src="https://onehorizonproductions.com/wp-content/uploads/2023/02/Christian-wedding-rituals-23-scaled.webp?auto=format&fit=crop&q=80&w=600" alt="Florals Setting" class="collage-img-sub">
+            </div>
+        </div>
+    </section>
+
+    <!-- ASYMMETRIC ZIGZAG SACRED LITURGY STREAM -->
+  <!-- REVENUE ARCHITECTURE: HIGH-FASHION INTERACTIVE LITURGY STREAM -->
+<section class="ritual-zine-section" id="liturgy">
+    
+    <!-- Abstract Ethereal Background Blobs to destroy the "blank white" feel -->
+    <div class="ambient-glow-cloud glow-pink"></div>
+    <div class="ambient-glow-cloud glow-sage"></div>
+
+    <div class="zine-section-header">
+        <h2 class="zine-title">The Order of Sacred Liturgy</h2>
+        <div class="header-line-accent"></div>
+    </div>
+
+    <div class="ritual-stream">
+        
+        <!-- Act 1 -->
+        <div class="stream-node">
+            <div class="node-graphic">
+                <!-- Pure CSS Animated Ring Halo surrounding the asset frame -->
+                <div class="animated-halo"></div>
+                <div class="node-circle-frame">
+                    <img src="https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&q=80&w=600" alt="Procession Walk">
+                </div>
+                <!-- Dynamic floating abstract bloom circle instead of a flat image -->
+                <div class="floating-petal-aura speed-slow"></div>
+            </div>
+            <div class="node-content">
+                <span class="node-num">Act I</span>
+                <h3 class="node-heading">The Bridal Procession</h3>
+                <p class="node-text">The church doors pull open as a live orchestral choir initiates the sacred movement. Accompanied by her father, Claire walks down the aisle towards Julian to signify family blessing, alignment, and transitions into a new legacy footprint.</p>
+            </div>
+        </div>
+
+        <!-- Act 2 -->
+        <div class="stream-node">
+            <div class="node-graphic">
+                <div class="animated-halo inverse-turn"></div>
+                <div class="node-circle-frame">
+                    <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=600" alt="Sacred Sermon">
+                </div>
+                <div class="floating-petal-aura speed-fast"></div>
+            </div>
+            <div class="node-content">
+                <span class="node-num">Act II</span>
+                <h3 class="node-heading">Liturgy of the Word</h3>
+                <p class="node-text">The officiating minister speaks holy scripture passages reflecting the true origin and weight of marital infrastructure. A custom pastoral charge follows, offering foundational advice to steer our spiritual home forward.</p>
+            </div>
+        </div>
+
+        <!-- Act 3 -->
+        <div class="stream-node">
+            <div class="node-graphic">
+                <div class="animated-halo"></div>
+                <div class="node-circle-frame">
+                    <img src="https://images.unsplash.com/photo-1607190074257-dd4b7af0309f?auto=format&fit=crop&q=80&w=600" alt="Vows Exchange">
+                </div>
+                <div class="floating-petal-aura speed-slow"></div>
+            </div>
+            <div class="node-content">
+                <span class="node-num">Act III</span>
+                <h3 class="node-heading">The Unconditional Vows</h3>
+                <p class="node-text">With hands bound gently together, Julian and Claire recite their marriage promises aloud. A declaration of total dedication through sickness and prosperity, deeper valleys and highest triumphs, until parted by death.</p>
+            </div>
+        </div>
+
+        <!-- Act 4 -->
+        <div class="stream-node">
+            <div class="node-graphic">
+                <div class="animated-halo inverse-turn"></div>
+                <div class="node-circle-frame">
+                    <img src="https://onehorizonproductions.com/wp-content/uploads/2023/02/Christian-wedding-rituals-23-scaled.webp?auto=format&fit=crop&q=80&w=600" alt="Rings Exchange">
+                </div>
+                <div class="floating-petal-aura speed-fast"></div>
+            </div>
+            <div class="node-content">
+                <span class="node-num">Act IV</span>
+                <h3 class="node-heading">The Covenant Rings</h3>
+                <p class="node-text">The continuous golden rings are officially blessed. Exchanged onto each other's left fingers, they form a visible structural circle showing unceasing devotion, honor, and complete internal transparency.</p>
+            </div>
+        </div>
+
+        <!-- Act 5 -->
+        <div class="stream-node">
+            <div class="node-graphic">
+                <div class="animated-halo"></div>
+                <div class="node-circle-frame">
+                    <img src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&q=80&w=600" alt="Unity Candle">
+                </div>
+                <div class="floating-petal-aura speed-slow"></div>
+            </div>
+            <div class="node-content">
+                <span class="node-num">Act V</span>
+                <h3 class="node-heading">The Ignition of Unity</h3>
+                <p class="node-text">Two family torches combine to set a distinct, single central flame ablaze. As the separate candles are blown out, the lone centerpiece remains burning bright—a stunning visual witness of two spirits transforming into one single flesh matrix.</p>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+
+
+    <!-- ASYMMETRIC DYNAMIC SCROLL TIMELINE -->
+    <section class="time-zine-section">
+        <div class="time-asymmetric-split">
+            
+            <div class="time-left-sticky">
+                <h2 class="sticky-headline">The Passing of Hours<span>Timeline of Celebrations</span></h2>
+            </div>
+
+            <div class="time-right-scroll">
+                
+                <!-- Card 1 -->
+                <div class="time-block-plate">
+                    <div class="plate-hour">14:30 EST</div>
+                    <h3 class="plate-title">The Sacred Solemnization</h3>
+                    <span class="plate-loc">St. Jude’s Catholic Chapel</span>
+                    <p class="plate-desc">The official mass ceremonies, scriptural breakdowns, and marital covenant sealings. We highly advise all attendees to arrive by 14:15 to find proper sanctuary seating.</p>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="time-block-plate">
+                    <div class="plate-hour">17:00 EST</div>
+                    <h3 class="plate-title">The Gathering Banquet</h3>
+                    <span class="plate-loc">The Rosewood Open Pavilion</span>
+                    <p class="plate-desc">Transitioning into an open-air pavilion night filled with live acoustic string adjustments, family addresses, fine dining courses, and long hours of high-energy dancing.</p>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- JOURNAL STYLE WRAP FOOTER -->
+    <footer class="zine-footer">
+        <div class="footer-monogram">J&C</div>
+        <div class="footer-content">
+            <h2 class="footer-heading">JULIAN & CLAIRE</h2>
+            <p class="footer-sub">Bound through absolute faith and grace.</p>
+            <p class="footer-credits">OCTOBER 17, 2026 • #JULIANANDCLAIRE2026 • Komal Babar </p>
+        </div>
+    </footer>
+
+</body>
+</html>

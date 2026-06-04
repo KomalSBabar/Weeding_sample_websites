@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rahul & Ananya - Wedding Celebration</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-crimson: #500010;
+            --royal-gold: #D4AF37;
+            --soft-gold: #F3E5AB;
+            --dark-bg: #140004;
+            --text-light: #fffdf9;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-light);
+            overflow-x: hidden;
+            background-image: radial-gradient(circle at center, #2a000a 0%, #140004 100%);
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--dark-bg); }
+        ::-webkit-scrollbar-thumb { background: var(--royal-gold); border-radius: 4px; }
+
+        /* Keyframe Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slowZoom {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+        }
+        @keyframes divineGlow {
+            0%, 100% { filter: drop-shadow(0 0 8px rgba(214,175,55,0.4)) brightness(1); }
+            50% { filter: drop-shadow(0 0 20px rgba(214,175,55,0.8)) brightness(1.1); }
+        }
+        @keyframes fall {
+            0% { transform: translateY(-10px) rotate(0deg); opacity: 0; }
+            10%, 90% { opacity: 0.5; }
+            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* Background Elements */
+        .petals-container {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 1;
+        }
+        .petal {
+            position: absolute;
+            background: #ffb703;
+            border-radius: 50% 0 50% 50%;
+            animation: fall 10s linear infinite;
+        }
+
+        /* Fixed Navigation Bar */
+        nav {
+            position: fixed;
+            top: 0; width: 100%; padding: 20px;
+            background: rgba(20, 0, 4, 0.95);
+            backdrop-filter: blur(10px);
+            display: flex; justify-content: center; gap: 35px;
+            z-index: 100;
+            border-bottom: 1px solid rgba(214, 175, 55, 0.2);
+        }
+        nav a {
+            color: var(--royal-gold);
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 500;
+            letter-spacing: 2px;
+            transition: 0.4s;
+        }
+        nav a:hover {
+            color: var(--text-light);
+            text-shadow: 0 0 8px var(--royal-gold);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 130px 20px 60px 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Fixed Size & Clean Background Ganesha Container */
+       
+        .bappa-container {
+            width: 80px; 
+            height: 80px; 
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: divineGlow 4s ease-in-out infinite;
+        }
+      
+
+        .shloka {
+            font-family: 'Playfair Display', serif;
+            color: var(--royal-gold);
+            font-size: 1.25rem;
+            margin-bottom: 30px;
+            letter-spacing: 2px;
+            font-style: italic;
+        }
+
+        .couple-frame {
+            width: 310px;
+            height: 410px;
+            border: 2px solid var(--royal-gold);
+            padding: 10px;
+            border-radius: 155px 155px 0 0;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+            margin-bottom: 35px;
+            background: rgba(80, 0, 16, 0.2);
+            overflow: hidden;
+        }
+        .couple-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 145px 145px 0 0;
+            animation: slowZoom 14s infinite ease-in-out;
+        }
+
+        .hero h1 {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 3.8rem;
+            color: var(--text-light);
+            text-shadow: 0 0 15px rgba(214,175,55,0.3);
+        }
+        .hero .subtitle {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            font-style: italic;
+            color: var(--royal-gold);
+            margin-bottom: 40px;
+            letter-spacing: 1px;
+        }
+
+        /* Countdown */
+        .countdown {
+            display: flex;
+            gap: 25px;
+            background: rgba(80, 0, 16, 0.5);
+            padding: 15px 40px;
+            border-radius: 4px;
+            border: 1px solid rgba(214,175,55,0.35);
+        }
+        .countdown-item { text-align: center; }
+        .countdown-number {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 1.8rem;
+            color: var(--royal-gold);
+            display: block;
+        }
+        .countdown-label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.8;
+        }
+
+        /* Section Rules */
+        .section {
+            padding: 90px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            max-width: 1100px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+        .section-title {
+            font-family: 'Cinzel Decorative', serif;
+            color: var(--royal-gold);
+            font-size: 2.2rem;
+            margin-bottom: 50px;
+            text-align: center;
+            letter-spacing: 2px;
+        }
+        .section-divider {
+            width: 100px;
+            height: 1px;
+            background: linear-gradient(to right, transparent, var(--royal-gold), transparent);
+            margin: -30px 0 50px 0;
+        }
+
+        /* Story Text */
+        .story-container {
+            background: rgba(80, 0, 16, 0.15);
+            border: 1px solid rgba(214,175,55,0.25);
+            padding: 45px;
+            border-radius: 8px;
+            text-align: center;
+            max-width: 800px;
+        }
+        .story-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.15rem;
+            line-height: 2;
+            color: #f7f2e8;
+        }
+
+        /* Timeline Section */
+        .timeline-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            width: 100%;
+            max-width: 850px;
+        }
+        .timeline-row {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+            background: rgba(20, 0, 4, 0.4);
+            border: 1px solid rgba(214,175,55,0.15);
+            padding: 25px;
+            border-radius: 8px;
+        }
+        .timeline-row:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+        .timeline-img-box {
+            width: 200px;
+            height: 200px;
+            flex-shrink: 0;
+            border: 1px solid var(--royal-gold);
+            padding: 6px;
+            border-radius: 4px;
+        }
+        .timeline-img-box img {
+            width: 100%; height: 100%; object-fit: cover;
+        }
+        .timeline-info h3 {
+            font-family: 'Cinzel Decorative', serif;
+            color: var(--royal-gold);
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            }
+        .timeline-info p {
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: #e2d7c5;
+        }
+
+        /* Rituals Layout */
+        .events-layout {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            width: 100%;
+        }
+        .event-card {
+            background: rgba(45, 0, 11, 0.7);
+            border: 1px solid rgba(214,175,55,0.2);
+            padding: 40px 30px;
+            border-radius: 6px;
+            flex: 1 1 300px;
+            max-width: 340px;
+            text-align: center;
+            transition: 0.4s;
+        }
+        .event-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--royal-gold);
+            box-shadow: 0 10px 25px rgba(214,175,55,0.15);
+        }
+        .event-card h3 {
+            font-family: 'Cinzel Decorative', serif;
+            color: var(--royal-gold);
+            margin-bottom: 12px;
+            font-size: 1.25rem;
+        }
+        .event-time {
+            font-size: 0.8rem;
+            color: var(--soft-gold);
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* Venue Map Card */
+        .venue-card {
+            background: linear-gradient(135deg, rgba(80,0,16,0.3) 0%, rgba(20,0,4,0.7) 100%);
+            border: 1px solid var(--royal-gold);
+            padding: 40px;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 750px;
+            text-align: center;
+        }
+        .venue-card h3 {
+            font-family: 'Cinzel Decorative', serif;
+            color: var(--royal-gold);
+            margin-bottom: 15px;
+        }
+        .map-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 30px;
+            border: 1px solid var(--royal-gold);
+            background: transparent;
+            color: var(--royal-gold);
+            text-decoration: none;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            font-weight: 500;
+            border-radius: 4px;
+            transition: 0.3s;
+        }
+        .map-btn:hover {
+            background: var(--royal-gold);
+            color: var(--dark-bg);
+            box-shadow: 0 0 15px rgba(214,175,55,0.4);
+        }
+
+        /* Blessings Card Matrix */
+        .blessings-wall {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+            width: 100%;
+            max-width: 900px;
+        }
+        .blessing-note {
+            background: rgba(80, 0, 16, 0.15);
+            border-left: 3px solid var(--royal-gold);
+            padding: 25px;
+            border-radius: 0 8px 8px 0;
+        }
+        .blessing-note p {
+            font-style: italic;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: #ebdcb9;
+        }
+        .blessing-author {
+            display: block;
+            margin-top: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--royal-gold);
+            text-transform: uppercase;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 50px 20px;
+            border-top: 1px solid rgba(214, 175, 55, 0.15);
+            background: #0a0002;
+        }
+        footer p { color: var(--royal-gold); font-size: 0.85rem; letter-spacing: 2px; }
+        footer span { display: block; margin-top: 10px; font-size: 0.75rem; opacity: 0.4; }
+
+        @media (max-width: 768px) {
+            nav { gap: 15px; padding: 15px 5px; }
+            nav a { font-size: 0.7rem; }
+            .hero h1 { font-size: 2.6rem; }
+            .couple-frame { width: 250px; height: 340px; }
+            .timeline-row, .timeline-row:nth-child(even) { flex-direction: column; text-align: center; gap: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="petals-container" id="petals"></div>
+
+    <nav>
+        <a href="#home">HOME</a>
+        <a href="#story">OUR STORY</a>
+        <a href="#timeline">JOURNEY</a>
+        <a href="#events">RITUALS</a>
+        <a href="#venue">VENUE</a>
+    </nav>
+
+    <section class="hero" id="home">
+        <div class="bappa-container">
+            <svg viewBox="0 0 100 100" width="100%" height="100%">
+                <defs>
+                    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#FFE259" />
+                        <stop offset="100%" stop-color="#FFA751" />
+                    </linearGradient>
+                </defs>
+                <g fill="none" stroke="url(#goldGrad)" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M42 12 C45 7, 55 7, 58 12 M40 17 C45 13, 55 13, 60 17 M36 23 C43 19, 57 19, 64 23 M50 6 L50 11" />
+                    <path d="M50 20 C46 25, 44 35, 45 45 C46 52, 53 58, 59 52 C64 47, 56 41, 56 37 C56 34, 62 34, 63 37 C65 43, 56 55, 66 54 C72 53, 76 46, 74 38 C72 32, 65 29, 62 25" />
+                    <path d="M37 25 C25 25, 26 38, 36 36" />
+                    <path d="M63 25 C75 25, 74 38, 64 36" />
+                    <path d="M38 39 C26 42, 23 58, 40 65 C48 68, 58 67, 66 64" />
+                    <path d="M44 66 C32 70, 40 85, 55 82 C68 80, 77 71, 74 58" />
+                    <path d="M50 23 L50 29" stroke-width="3" />
+                    <path d="M47 26 Q50 28 53 26" />
+                </g>
+            </svg>
+        </div>
+
+        <div class="shloka">॥ वक्रतुण्ड महाकाय सूर्यकोटि समप्रभ ॥</div>
+        
+        <div class="couple-frame">
+            <img src="https://i.pinimg.com/474x/31/a8/e5/31a8e562cefdfba51e775bb478d5dcc4.jpg?q=80&w=600" alt="Couple Showcase" class="couple-img">
+        </div>
+
+        <h1>Rahul & Ananya</h1>
+        <div class="subtitle">Are Solemnly Unionizing</div>
+
+        <div class="countdown">
+            <div class="countdown-item"><span class="countdown-number" id="days">00</span><span class="countdown-label">Days</span></div>
+            <div class="countdown-item"><span class="countdown-number" id="hours">00</span><span class="countdown-label">Hrs</span></div>
+            <div class="countdown-item"><span class="countdown-number" id="mins">00</span><span class="countdown-label">Mins</span></div>
+            <div class="countdown-item"><span class="countdown-number" id="secs">00</span><span class="countdown-label">Secs</span></div>
+        </div>
+    </section>
+
+    <section class="section" id="story">
+        <h2 class="section-title">Our Story</h2>
+        <div class="section-divider"></div>
+        <div class="story-container">
+            <p class="story-text">
+                Two souls, brought together by destiny, rooted in tradition, and bound by love. 
+                What started as a beautiful conversation orchestrated by our families soon blossomed into a lifelong promise. 
+                With the blessings of our elders and the spirit of celebration in our hearts, we step forward into our happily ever after.
+            </p>
+        </div>
+    </section>
+
+    <section class="section" id="timeline">
+        <h2 class="section-title">The Journey</h2>
+        <div class="section-divider"></div>
+        <div class="timeline-grid">
+            <div class="timeline-row">
+                <div class="timeline-img-box">
+                    <img src="https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?q=80&w=300" alt="First Meet">
+                </div>
+                <div class="timeline-info">
+                    <h3>Where It All Began</h3>
+                    <p>A quiet afternoon meet arranged by our families turned into hours of endless laughter, stories, and the sudden beautiful realization that we had found our match.</p>
+                </div>
+            </div>
+            <div class="timeline-row">
+                <div class="timeline-img-box">
+                    <img src="https://i.pinimg.com/474x/31/a8/e5/31a8e562cefdfba51e775bb478d5dcc4.jpg?q=80&w=300" alt="Engagement">
+                </div>
+                <div class="timeline-info">
+                    <h3>The Sakharpuda</h3>
+                    <p>Surrounded by local multi-colored traditional standard frames, sweet pedhas, and our closest relatives, we exchanged rings and officially locked in our future promises.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="events">
+        <h2 class="section-title">The Wedding Rituals</h2>
+        <div class="section-divider"></div>
+        <div class="events-layout">
+            <div class="event-card">
+                <h3>Haldi & Mehendi</h3>
+                <div class="event-time">Dec 18, 2026 | 11:00 AM</div>
+                <p>A vibrant celebration filled with marigold accents, traditional music, turmeric blessings, and henna artistry.</p>
+            </div>
+            <div class="event-card">
+                <h3>Lagna Muhurta</h3>
+                <div class="event-time">Dec 19, 2026 | 09:30 AM</div>
+                <p>The sacred Maharashtrian wedding assembly, featuring the traditional Antarpat ritual followed by Saptapadi.</p>
+            </div>
+            <div class="event-card">
+                <h3>The Reception</h3>
+                <div class="event-time">Dec 19, 2026 | 07:00 PM</div>
+                <p>Join us for an elegant evening of dinner, music, and celebration as we mark our first official moments together.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="venue">
+        <h2 class="section-title">The Venue</h2>
+        <div class="section-divider"></div>
+        <div class="venue-card">
+            <h3>The Royal Maratha Pavilions</h3>
+            <p style="font-size: 1rem; color: #ebdcb9; margin-bottom: 8px;">Main Highway Enclave, Senapati Bapat Marg, Pune</p>
+            <p style="font-size: 0.9rem; opacity: 0.8;">Valet parking and accommodation arrays are available inside the primary resort block for arriving guests.</p>
+            <a href="https://maps.google.com" target="_blank" class="map-btn">Get Directions On Map</a>
+        </div>
+    </section>
+
+  
+
+    <footer>
+        <p>Together with our Families, We Await Your Presence.</p>
+        <span>#RAHULWEDSANANYA</span>
+    </footer>
+
+    <!-- <script>
+        // Background Petals Generator
+        const container = document.getElementById('petals');
+        const leafColors = ['#ffb703', '#fb8500', '#d4af37'];
+        for (let i = 0; i < 25; i++) {
+            const petal = document.createElement('div');
+            petal.classList.add('petal');
+            petal.style.left = Math.random() * 100 + 'vw';
+            petal.style.animationDelay = Math.random() * 6 + 's';
+            petal.style.animationDuration = (Math.random() * 4 + 6) + 's';
+            petal.style.width = Math.random() * 10 + 8 + 'px';
+            petal.style.height = petal.style.width;
+            petal.style.background = leafColors[Math.floor(Math.random() * leafColors.length)];
+            container.appendChild(petal);
+        }
+
+        // Live Countdown Clock
+        const targetDate = new Date("Dec 19, 2026 09:30:00").getTime();
+        setInterval(function() {
+            const now = new Date().getTime();
+            const difference = targetDate - now;
+            const d = Math.floor(difference / (1000 * 60 * 60 * 24));
+            const h = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const m = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((difference % (1000 * 60)) / 1000);
+
+            document.getElementById("days").innerText = d < 10 ? "0" + d : d;
+            document.getElementById("hours").innerText = h < 10 ? "0" + h : h;
+            document.getElementById("mins").innerText = m < 10 ? "0" + m : m;
+            document.getElementById("secs").innerText = s < 10 ? "0" + s : s;
+        }, 1000);
+    </script> -->
+
+    <script>
+    // Premium Falling Golden Hearts Generator
+    const container = document.getElementById('petals');
+    
+    for (let i = 0; i < 25; i++) {
+        // Create a container wrapper for the heart particle
+        const heartNode = document.createElement('div');
+        heartNode.classList.add('petal'); // Reuses the falling CSS animation path safely
+        
+        // Randomize the drop layout and speeds
+        heartNode.style.left = Math.random() * 100 + 'vw';
+        heartNode.style.animationDelay = Math.random() * 6 + 's';
+        heartNode.style.animationDuration = (Math.random() * 4 + 7) + 's';
+        
+        // Scale size adjustments dynamically
+        const randomSize = Math.random() * 12 + 12; // Sizes between 12px and 24px
+        heartNode.style.width = randomSize + 'px';
+        heartNode.style.height = randomSize + 'px';
+        
+        // Remove old square backgrounds so only the vector heart shows
+        heartNode.style.background = 'none';
+        heartNode.style.borderRadius = '0';
+        
+        // Inject clean Vector Heart SVG with dynamic golden color tones
+        const goldShade = Math.random() > 0.5 ? '#FFE259' : '#FFA751';
+        heartNode.innerHTML = `
+            <svg viewBox="0 0 24 24" width="100%" height="100%" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" 
+                      fill="${goldShade}"/>
+            </svg>
+        `;
+        
+        container.appendChild(heartNode);
+    }
+
+    // Live Countdown Clock
+    const targetDate = new Date("Nov 19, 2026 09:30:00").getTime();
+    setInterval(function() {
+        const now = new Date().getTime();
+        const difference = targetDate - now;
+        const d = Math.floor(difference / (1000 * 60 * 60 * 24));
+        const h = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const m = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+        const s = Math.floor((difference % (1000 * 60)) / 1000);
+
+        document.getElementById("days").innerText = d < 10 ? "0" + d : d;
+        document.getElementById("hours").innerText = h < 10 ? "0" + h : h;
+        document.getElementById("mins").innerText = m < 10 ? "0" + m : m;
+        document.getElementById("secs").innerText = s < 10 ? "0" + s : s;
+    }, 1000);
+</script>
+
+
+
+</body>
+</html>
